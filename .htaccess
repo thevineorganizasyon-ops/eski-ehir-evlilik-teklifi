@@ -1,0 +1,83 @@
+# Eskişehir Evlilik Teklifi — Apache ayarları
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # HTTPS ve www'ye yönlendir (alan adınız www'siz olacaksa iki satırı uyarlayın)
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+  RewriteRule ^ https://www.%1%{REQUEST_URI} [L,R=301]
+  # Eski Wix sitesinin adreslerini yeni sayfalara kalıcı (301) yönlendir
+  RewriteRule ^evlilikteklifi/?$ / [L,R=301,NC]
+  RewriteRule ^evlilik-teklifi/?$ / [L,R=301,NC]
+  RewriteRule ^doğumgünü/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^dogumgunu/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^nişan/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^nisan/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^yıldönümü/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^yildonumu/?$ /ozel-gun-surprizleri/ [L,R=301,NC]
+  RewriteRule ^hakkımızda/?$ /hakkimizda/ [L,R=301,NC]
+  RewriteRule ^contact/?$ /iletisim/ [L,R=301,NC]
+  RewriteRule ^shop/?$ /evlilik-teklifi-fiyatlari/ [L,R=301,NC]
+  RewriteRule ^product-page/restorant-konsepti/?$ /gaga-restoran-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/kanlı-kavak-iskele-konsepti/?$ /kanlikavak-parki-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/kanli-kavak-iskele-konsepti/?$ /kanlikavak-parki-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/orman-konsepti/?$ /evlilik-teklifi-mekanlari/ [L,R=301,NC]
+  RewriteRule ^product-page/balon-ev-konsepti/?$ /balon-ev-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/bungalov-konsepti/?$ /bungalov-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/otel-konsepti/?$ /otel-odasinda-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/vosvos-konsepti/?$ /karavan-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/sazova-konsepti/?$ /sazova-parki-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/gondol-konsepti/?$ /gondolda-evlilik-teklifi/ [L,R=301,NC]
+  RewriteRule ^product-page/meşale/?$ /evlilik-teklifi-susleme/ [L,R=301,NC]
+  RewriteRule ^product-page/volkan/?$ /evlilik-teklifi-susleme/ [L,R=301,NC]
+  RewriteRule ^product-page/gül-adet/?$ /evlilik-teklifi-susleme/ [L,R=301,NC]
+  RewriteRule ^product-page/balon-süsleme/?$ /evlilik-teklifi-susleme/ [L,R=301,NC]
+  RewriteRule ^product-page/helyum-balon-kalpli/?$ /evlilik-teklifi-susleme/ [L,R=301,NC]
+  RewriteRule ^product-page/kemancı/?$ /teklif-al/ [L,R=301,NC]
+  RewriteRule ^product-page/fotoğraf-çekimi/?$ /teklif-al/ [L,R=301,NC]
+  RewriteRule ^product-page/video-çekimi/?$ /teklif-al/ [L,R=301,NC]
+  RewriteRule ^product-page/drone-çekim/?$ /teklif-al/ [L,R=301,NC]
+  RewriteRule ^product-page/ /evlilik-teklifi-fiyatlari/ [L,R=301,NC]
+  # Sonunda / olmayan klasör adreslerini tamamla
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.*)$ /$1/ [L,R=301]
+  # index.html'li adresleri temiz adrese yönlendir
+  RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301]
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml application/xml text/plain application/manifest+json
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#^/(admin|fotograflar)/#">
+    Header set X-Robots-Tag "noindex"
+  </If>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+AddType application/manifest+json .webmanifest
+AddType image/webp .webp

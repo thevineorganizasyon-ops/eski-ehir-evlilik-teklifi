@@ -1,0 +1,7 @@
+# Netlify: her kayıtta (yönetim panelinden yapılan değişiklikler dahil) site otomatik yeniden üretilir
+[build]
+  command = "python3 build.py"
+  publish = "dist/site"
+
+[build.environment]
+  PYTHON_VERSION = "3.12"
